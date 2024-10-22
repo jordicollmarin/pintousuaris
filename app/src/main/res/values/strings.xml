@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">PintoUsuaris</string>
-    <string name="loading">Carregant</string>
     <string name="error">Error</string>
-    <string name="retry">Torna-ho a intentar, maàquina</string>
+    <string name="retry">Torna-ho a intentar, màquina!</string>
+
+    <string name="usuaris">Usuaris</string>
+    <string name="posts">Posts</string>
+    <string name="back_button">Enrere</string>
 </resources>

@@ -1,9 +1,7 @@
 package com.example.pintousuaris
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -18,32 +16,23 @@ import kotlinx.coroutines.launch
 /**
  * UI state for the MainActivity
  */
-sealed interface PintoUsuarisUiState {
-    data class Success(val usuaris: List<Usuari>) : PintoUsuarisUiState
-    data object Error : PintoUsuarisUiState
-    data object Loading : PintoUsuarisUiState
-}
-
-/**
- * UI state for the PostActivity
- */
-sealed interface PintoPostsUiState {
-    data class Success(val posts: List<Post>) : PintoPostsUiState
-    data object Error : PintoPostsUiState
-    data object Loading : PintoPostsUiState
+sealed interface UiState<out R> {
+    data class Success<T>(val list: List<T>) : UiState<T>
+    data object Error : UiState<Nothing>
+    data object Loading : UiState<Nothing>
 }
 
 class MainViewModel(
     private val repository: UsuarisRepository
 ) : ViewModel() {
 
-    /** The mutable State that stores the status of the most recent request */
-    var usuarisListUiState: PintoUsuarisUiState by mutableStateOf(PintoUsuarisUiState.Loading)
-        private set
+    /** The mutable State that stores the status of the user request */
+    private val _usuarisListUiState = MutableLiveData<UiState<Usuari>>(UiState.Loading)
+    val usuarisListUiState = _usuarisListUiState
 
-    /** The mutable State that stores the status of the most recent request */
-    var postsListsUiState: PintoPostsUiState by mutableStateOf(PintoPostsUiState.Loading)
-        private set
+    /** The mutable State that stores the status of the posts request */
+    private val _postsListUiState = MutableLiveData<UiState<Post>>(UiState.Loading)
+    val postsListUiState = _postsListUiState
 
     /**
      * Call getUsuaris() on init so we can display status immediately.
@@ -52,37 +41,38 @@ class MainViewModel(
         getUsuaris()
     }
 
-
     /**
      * Gets Usuaris information from the API Retrofit service and updates the users list.
      */
     fun getUsuaris() {
-        usuarisListUiState = PintoUsuarisUiState.Loading
+        _usuarisListUiState.value = UiState.Loading
 
         viewModelScope.launch {
-            usuarisListUiState = try {
+            _usuarisListUiState.value = try {
                 val usuaris = repository.getUsuaris()
                 Log.d("Pinto log USUARIS - SUCCESS", usuaris.toString())
-                PintoUsuarisUiState.Success(usuaris)
+                UiState.Success(usuaris)
             } catch (e: Exception) {
                 Log.d("Pinto log USUARIS - ERROR", e.message.toString())
-                PintoUsuarisUiState.Error
+                UiState.Error
             }
         }
     }
 
     /**
-     * Gets Posts from a selected Usuari using the API Retrofit service.
+     * Gets Posts from a user
      */
     fun getPosts(userId: Int) {
+        _postsListUiState.value = UiState.Loading
+
         viewModelScope.launch {
-            postsListsUiState = try {
+            _postsListUiState.value = try {
                 val posts = repository.getPosts(userId)
                 Log.d("Pinto log POSTS - SUCCESS", posts.toString())
-                PintoPostsUiState.Success(posts)
+                UiState.Success(posts)
             } catch (e: Exception) {
                 Log.d("Pinto log POSTS - ERROR", e.message.toString())
-                PintoPostsUiState.Error
+                UiState.Error
             }
         }
     }
