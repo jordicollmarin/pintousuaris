@@ -3,15 +3,13 @@ package com.example.pintousuaris
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.pintousuaris.data.UsuarisRepository
 import com.example.pintousuaris.model.Post
 import com.example.pintousuaris.model.Usuari
+import com.example.pintousuaris.network.UsuarisService
 import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * UI state for the MainActivity
@@ -28,9 +26,18 @@ sealed interface PostsUiState {
     data object Loading : PostsUiState
 }
 
-class MainViewModel(
-    private val usuarisRepository: UsuarisRepository
-) : ViewModel() {
+class MainViewModel : ViewModel() {
+
+    private val baseUrl = "https://jsonplaceholder.typicode.com/"
+
+    private val retrofit: Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl(baseUrl)
+        .build()
+
+    private val retrofitService: UsuarisService by lazy {
+        retrofit.create(UsuarisService::class.java)
+    }
 
     /** The mutable State that stores the status of the user request */
     private val _usuarisUiState = MutableLiveData<UsuarisUiState>(UsuarisUiState.Loading)
@@ -55,7 +62,7 @@ class MainViewModel(
 
         viewModelScope.launch {
             _usuarisUiState.value = try {
-                val usuaris = usuarisRepository.getUsuaris()
+                val usuaris = retrofitService.getUsuaris()
                 Log.d("Pinto log USUARIS - SUCCESS", usuaris.toString())
                 UsuarisUiState.Success(usuaris)
             } catch (e: Exception) {
@@ -73,25 +80,12 @@ class MainViewModel(
 
         viewModelScope.launch {
             _postsListUiState.value = try {
-                val posts = usuarisRepository.getPosts(userId)
+                val posts = retrofitService.getPosts(userId)
                 Log.d("Pinto log POSTS - SUCCESS", posts.toString())
                 PostsUiState.Success(posts)
             } catch (e: Exception) {
                 Log.d("Pinto log POSTS - ERROR", e.message.toString())
                 PostsUiState.Error
-            }
-        }
-    }
-
-    /**
-     * Factory for [MainViewModel] that takes [UsuarisRepository] as a dependency
-     */
-    companion object {
-        val creadorDeMainViewModel: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as PintoUsuarisApplication)
-                val usuarisRepository = application.container.usuarisRepository
-                MainViewModel(usuarisRepository)
             }
         }
     }

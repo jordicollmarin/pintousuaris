@@ -64,7 +64,7 @@ fun PintoUsuarisTopBar(
 
 @Composable
 fun PintoUsuarisApp(
-    viewModel: MainViewModel = viewModel(factory = MainViewModel.creadorDeMainViewModel),
+    viewModel: MainViewModel = viewModel<MainViewModel>(),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
