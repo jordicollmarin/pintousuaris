@@ -26,15 +26,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pintousuaris.ui.PostsScreen
 import com.example.pintousuaris.ui.UsuarisScreen
 
-enum class PintoUsuarisScreen(@StringRes val title: Int) {
-    Usuaris(title = R.string.usuaris),
-    Posts(title = R.string.posts),
+enum class PintoUsuarisNavigation(@StringRes val title: Int) {
+    Usuaris(title = R.string.usuaris_screen_title),
+    Posts(title = R.string.posts_screen_title),
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun PintoUsuarisTopBar(
-    currentScreen: PintoUsuarisScreen,
+    currentScreen: PintoUsuarisNavigation,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
 ) {
@@ -53,7 +53,7 @@ fun PintoUsuarisTopBar(
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button),
+                        contentDescription = stringResource(R.string.back_button_content_description),
                         tint = Color.Yellow
                     )
                 }
@@ -68,8 +68,8 @@ fun PintoUsuarisApp(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = PintoUsuarisScreen.valueOf(
-        value = backStackEntry?.destination?.route ?: PintoUsuarisScreen.Usuaris.name
+    val currentScreen = PintoUsuarisNavigation.valueOf(
+        value = backStackEntry?.destination?.route ?: PintoUsuarisNavigation.Usuaris.name
     )
 
     Scaffold(
@@ -82,28 +82,28 @@ fun PintoUsuarisApp(
             )
         }
     ) { paddingValues ->
-        val uiStateUsers = viewModel.usuarisListUiState.observeAsState()
+        val usuarisUiState = viewModel.usuarisUiState.observeAsState()
         val uiStatePosts = viewModel.postsListUiState.observeAsState()
 
         NavHost(
             navController = navController,
-            startDestination = PintoUsuarisScreen.Usuaris.name,
+            startDestination = PintoUsuarisNavigation.Usuaris.name,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(route = PintoUsuarisScreen.Usuaris.name) {
+            composable(route = PintoUsuarisNavigation.Usuaris.name) {
                 UsuarisScreen(
-                    uiState = uiStateUsers.value ?: UiState.Loading,
+                    usuarisUiState = usuarisUiState.value ?: UsuarisUiState.Error,
                     onItemClicked = { userId ->
                         viewModel.getPosts(userId)
-                        navController.navigate(PintoUsuarisScreen.Posts.name)
+                        navController.navigate(PintoUsuarisNavigation.Posts.name)
                     },
                     onErrorRetry = { viewModel.getUsuaris() }
                 )
             }
 
-            composable(route = PintoUsuarisScreen.Posts.name) {
+            composable(route = PintoUsuarisNavigation.Posts.name) {
                 PostsScreen(
-                    uiState = uiStatePosts.value ?: UiState.Loading,
+                    uiState = uiStatePosts.value ?: PostsUiState.Error,
                     onErrorRetry = {
                         navController.navigateUp()
                     }

@@ -16,19 +16,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.pintousuaris.R
-import com.example.pintousuaris.UiState
+import com.example.pintousuaris.UsuarisUiState
 import com.example.pintousuaris.model.Usuari
 
 @Composable
 fun UsuarisScreen(
-    uiState: UiState<Usuari>,
+    usuarisUiState: UsuarisUiState,
     onItemClicked: ((Int) -> Unit),
     onErrorRetry: () -> Unit
 ) {
-    when (uiState) {
-        is UiState.Loading -> Column(
+    when (usuarisUiState) {
+        is UsuarisUiState.Loading -> Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -36,9 +39,9 @@ fun UsuarisScreen(
             CircularProgressIndicator()
         }
 
-        is UiState.Success -> UsuarisList(uiState.list, onItemClicked)
+        is UsuarisUiState.Success -> UsuarisList(usuarisUiState.usuaris, onItemClicked)
 
-        is UiState.Error -> Column(
+        is UsuarisUiState.Error -> Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -53,18 +56,22 @@ fun UsuarisScreen(
 
 @Composable
 fun UsuarisList(
-    list: List<Usuari>,
-    onItemClicked: ((Int) -> Unit),
+    usuaris: List<Usuari>,
+    onItemClicked: ((Int) -> Unit)
 ) {
     LazyColumn {
-        items(list) { usuari ->
+        items(usuaris) { usuari ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
                     .clickable { onItemClicked(usuari.id) }
             ) {
-                Text(usuari.name)
+                Text(
+                    text = usuari.name,
+                    fontSize = TextUnit(20f, TextUnitType.Sp),
+                    fontWeight = FontWeight.Bold
+                )
                 Text(usuari.email)
                 HorizontalDivider()
             }

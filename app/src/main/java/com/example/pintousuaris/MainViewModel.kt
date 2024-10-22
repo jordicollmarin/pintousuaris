@@ -16,22 +16,28 @@ import kotlinx.coroutines.launch
 /**
  * UI state for the MainActivity
  */
-sealed interface UiState<out R> {
-    data class Success<T>(val list: List<T>) : UiState<T>
-    data object Error : UiState<Nothing>
-    data object Loading : UiState<Nothing>
+sealed interface UsuarisUiState {
+    data class Success(val usuaris: List<Usuari>) : UsuarisUiState
+    data object Error : UsuarisUiState
+    data object Loading : UsuarisUiState
+}
+
+sealed interface PostsUiState {
+    data class Success(val posts: List<Post>) : PostsUiState
+    data object Error : PostsUiState
+    data object Loading : PostsUiState
 }
 
 class MainViewModel(
-    private val repository: UsuarisRepository
+    private val usuarisRepository: UsuarisRepository
 ) : ViewModel() {
 
     /** The mutable State that stores the status of the user request */
-    private val _usuarisListUiState = MutableLiveData<UiState<Usuari>>(UiState.Loading)
-    val usuarisListUiState = _usuarisListUiState
+    private val _usuarisUiState = MutableLiveData<UsuarisUiState>(UsuarisUiState.Loading)
+    val usuarisUiState = _usuarisUiState
 
     /** The mutable State that stores the status of the posts request */
-    private val _postsListUiState = MutableLiveData<UiState<Post>>(UiState.Loading)
+    private val _postsListUiState = MutableLiveData<PostsUiState>(PostsUiState.Loading)
     val postsListUiState = _postsListUiState
 
     /**
@@ -42,37 +48,37 @@ class MainViewModel(
     }
 
     /**
-     * Gets Usuaris information from the API Retrofit service and updates the users list.
+     * Gets Usuaris using the API Retrofit Service (a través del [UsuarisRepository])
      */
     fun getUsuaris() {
-        _usuarisListUiState.value = UiState.Loading
+        _usuarisUiState.value = UsuarisUiState.Loading
 
         viewModelScope.launch {
-            _usuarisListUiState.value = try {
-                val usuaris = repository.getUsuaris()
+            _usuarisUiState.value = try {
+                val usuaris = usuarisRepository.getUsuaris()
                 Log.d("Pinto log USUARIS - SUCCESS", usuaris.toString())
-                UiState.Success(usuaris)
+                UsuarisUiState.Success(usuaris)
             } catch (e: Exception) {
                 Log.d("Pinto log USUARIS - ERROR", e.message.toString())
-                UiState.Error
+                UsuarisUiState.Error
             }
         }
     }
 
     /**
-     * Gets Posts from a user
+     * Gets Posts from a specific user using the API Retrofit Service (a través del [UsuarisRepository])
      */
     fun getPosts(userId: Int) {
-        _postsListUiState.value = UiState.Loading
+        _postsListUiState.value = PostsUiState.Loading
 
         viewModelScope.launch {
             _postsListUiState.value = try {
-                val posts = repository.getPosts(userId)
+                val posts = usuarisRepository.getPosts(userId)
                 Log.d("Pinto log POSTS - SUCCESS", posts.toString())
-                UiState.Success(posts)
+                PostsUiState.Success(posts)
             } catch (e: Exception) {
                 Log.d("Pinto log POSTS - ERROR", e.message.toString())
-                UiState.Error
+                PostsUiState.Error
             }
         }
     }

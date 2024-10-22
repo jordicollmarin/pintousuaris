@@ -15,18 +15,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.example.pintousuaris.PostsUiState
 import com.example.pintousuaris.R
-import com.example.pintousuaris.UiState
 import com.example.pintousuaris.model.Post
 
 @Composable
 fun PostsScreen(
-    uiState: UiState<Post>,
+    uiState: PostsUiState,
     onErrorRetry: () -> Unit
 ) {
     when (uiState) {
-        is UiState.Loading -> Column(
+        is PostsUiState.Loading -> Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -34,9 +37,9 @@ fun PostsScreen(
             CircularProgressIndicator()
         }
 
-        is UiState.Success -> PostsList(uiState.list)
+        is PostsUiState.Success -> PostsList(uiState.posts)
 
-        is UiState.Error -> Column(
+        is PostsUiState.Error -> Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -50,16 +53,23 @@ fun PostsScreen(
 }
 
 @Composable
-fun PostsList(list: List<Post>) {
+fun PostsList(posts: List<Post>) {
     LazyColumn {
-        items(list) { post ->
+        items(posts) { post ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Text(post.title)
-                Text(post.body)
+                Text(
+                    text = post.title,
+                    fontSize = TextUnit(20f, TextUnitType.Sp),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = post.body,
+                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                )
                 HorizontalDivider()
             }
         }
