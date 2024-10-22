@@ -23,7 +23,7 @@ sealed interface UsuarisUiState {
 }
 
 sealed interface PostsUiState {
-    data class Success(val posts: List<Post>) : PostsUiState
+    data class Success(val userName: String, val posts: List<Post>) : PostsUiState
     data object Error : PostsUiState
     data object Loading : PostsUiState
 }
@@ -68,14 +68,14 @@ class MainViewModel(
     /**
      * Gets Posts from a specific user using the API Retrofit Service (a través del [UsuarisRepository])
      */
-    fun getPosts(userId: Int) {
+    fun getPosts(userId: Int, userName: String) {
         _postsListUiState.value = PostsUiState.Loading
 
         viewModelScope.launch {
             _postsListUiState.value = try {
                 val posts = usuarisRepository.getPosts(userId)
                 Log.d("Pinto log POSTS - SUCCESS", posts.toString())
-                PostsUiState.Success(posts)
+                PostsUiState.Success(userName, posts)
             } catch (e: Exception) {
                 Log.d("Pinto log POSTS - ERROR", e.message.toString())
                 PostsUiState.Error
