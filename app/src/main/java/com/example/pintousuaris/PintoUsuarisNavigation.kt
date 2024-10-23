@@ -93,8 +93,10 @@ fun PintoUsuarisApp(
             composable(route = PintoUsuarisNavigation.Usuaris.name) {
                 UsuarisScreen(
                     usuarisUiState = usuarisUiState.value ?: UsuarisUiState.Error,
-                    onItemClicked = { userId ->
-                        viewModel.getPosts(userId)
+                   // onItemClicked = { userId ->
+                    //    viewModel.getPosts(userId)
+                    onItemClicked = { userId, userName ->
+                            viewModel.getPosts(userId, userName)
                         navController.navigate(PintoUsuarisNavigation.Posts.name)
                     },
                     onErrorRetry = { viewModel.getUsuaris() }

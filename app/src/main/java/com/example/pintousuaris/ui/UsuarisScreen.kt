@@ -27,7 +27,8 @@ import com.example.pintousuaris.model.Usuari
 @Composable
 fun UsuarisScreen(
     usuarisUiState: UsuarisUiState,
-    onItemClicked: ((Int) -> Unit),
+    //onItemClicked: ((Int) -> Unit),
+    onItemClicked: ((Int, String) -> Unit),
     onErrorRetry: () -> Unit
 ) {
     when (usuarisUiState) {
@@ -57,7 +58,8 @@ fun UsuarisScreen(
 @Composable
 fun UsuarisList(
     usuaris: List<Usuari>,
-    onItemClicked: ((Int) -> Unit)
+    //onItemClicked: ((Int) -> Unit)
+    onItemClicked: ((Int, String) -> Unit)
 ) {
     LazyColumn {
         items(usuaris) { usuari ->
@@ -65,7 +67,8 @@ fun UsuarisList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .clickable { onItemClicked(usuari.id) }
+                    //.clickable { onItemClicked(usuari.id)
+                    .clickable { onItemClicked(usuari.id, usuari.name) }
             ) {
                 Text(
                     text = usuari.name,

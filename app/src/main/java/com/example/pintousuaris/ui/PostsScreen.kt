@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.pintousuaris.PostsUiState
 import com.example.pintousuaris.R
-import com.example.pintousuaris.model.Post
+//import com.example.pintousuaris.model.Post
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun PostsScreen(
@@ -37,7 +39,8 @@ fun PostsScreen(
             CircularProgressIndicator()
         }
 
-        is PostsUiState.Success -> PostsList(uiState.posts)
+        //is PostsUiState.Success -> PostsList(uiState.posts)
+        is PostsUiState.Success -> PostsList(uiState)
 
         is PostsUiState.Error -> Column(
             modifier = Modifier.fillMaxSize(),
@@ -53,7 +56,7 @@ fun PostsScreen(
 }
 
 @Composable
-fun PostsList(posts: List<Post>) {
+/*fun PostsList(posts: List<Post>) {
     LazyColumn {
         items(posts) { post ->
             Column(
@@ -74,4 +77,39 @@ fun PostsList(posts: List<Post>) {
             }
         }
     }
+}*/
+fun PostsList(data: PostsUiState.Success) {
+    Column {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            text = "Usuari seleccionat: ${data.userName}",
+            color = Color.Blue,
+            fontSize = TextUnit(16f, TextUnitType.Sp),
+            fontWeight = FontWeight.Bold
+        )
+
+        LazyColumn {
+            items(data.posts) { post ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = post.title,
+                        fontSize = TextUnit(20f, TextUnitType.Sp),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = post.body,
+                        fontSize = TextUnit(12f, TextUnitType.Sp),
+                    )
+                    HorizontalDivider()
+                }
+            }
+        }
+    }
 }
+
