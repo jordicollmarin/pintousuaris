@@ -55,7 +55,7 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * Gets Usuaris using the API Retrofit Service (a través del [UsuarisRepository])
+     * Gets Usuaris using the Retrofit Service
      */
     fun getUsuaris() {
         _usuarisUiState.value = UsuarisUiState.Loading
@@ -73,7 +73,7 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * Gets Posts from a specific user using the API Retrofit Service (a través del [UsuarisRepository])
+     * Gets Posts from a specific user using the Retrofit Service
      */
     fun getPosts(userId: Int) {
         _postsListUiState.value = PostsUiState.Loading

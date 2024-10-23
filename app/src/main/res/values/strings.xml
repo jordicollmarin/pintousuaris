@@ -2,9 +2,7 @@
     <string name="app_name">PintoUsuaris</string>
     <string name="usuaris_screen_title">Usuaris</string>
     <string name="posts_screen_title">Posts</string>
-
-    <string name="error">Error</string>
-    <string name="retry">Torna-ho a intentar, màquina!</string>
-
+    <string name="error">Error !!</string>
+    <string name="retry">Torna-ho a intentar</string>
     <string name="back_button_content_description">Enrere</string>
 </resources>
