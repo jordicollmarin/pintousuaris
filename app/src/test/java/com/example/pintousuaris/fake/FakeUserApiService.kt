@@ -10,6 +10,8 @@ class FakeUserApiService : UsuarisService {
     }
 
     override suspend fun getPosts(userId: Int): List<Post> {
-        return FakeDataSource.postsList
+        return FakeDataSource.postsList.filter { post ->
+            post.userId == userId
+        }
     }
 }

@@ -15,9 +15,9 @@ object FakeDataSource {
     private const val idPostOne = 1111
     private const val titlePostOne = "Post1 Fake title"
     private const val bodyPostOne = "Post1 Fake body"
-    private const val idPostTwo = 2222
-    private const val titlePostTwo = "Post1 Fake title"
-    private const val bodyPostTwo = "Post1 Fake body"
+    const val idPostTwo = 2222
+    const val titlePostTwo = "Post1 Fake title"
+    const val bodyPostTwo = "Post1 Fake body"
 
     val usersList = listOf(
         Usuari(
