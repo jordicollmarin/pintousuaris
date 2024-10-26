@@ -12,9 +12,9 @@ object FakeDataSource {
     private const val emailOne = "url.one"
     private const val emailTwo = "url.two"
 
-    private const val idPostOne = 1111
-    private const val titlePostOne = "Post1 Fake title"
-    private const val bodyPostOne = "Post1 Fake body"
+    const val idPostOne = 1111
+    const val titlePostOne = "Post1 Fake title"
+    const val bodyPostOne = "Post1 Fake body"
     const val idPostTwo = 2222
     const val titlePostTwo = "Post2 Fake title"
     const val bodyPostTwo = "Post2 Fake body"
@@ -49,11 +49,11 @@ object FakeDataSource {
             body = bodyPostTwo
         ),
         Post(
-            userId = idTwo,
+            userId = idOne,
             id = idPostThree,
             title = titlePostThree,
             body = bodyPostThree
-    )
+        )
     )
 }
 

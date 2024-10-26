@@ -2,10 +2,13 @@ package com.example.pintousuaris
 
 import com.example.pintousuaris.data.NetworkUsuarisRepository
 import com.example.pintousuaris.fake.FakeDataSource
+import com.example.pintousuaris.fake.FakeDataSource.bodyPostOne
 import com.example.pintousuaris.fake.FakeDataSource.bodyPostThree
 import com.example.pintousuaris.fake.FakeDataSource.bodyPostTwo
+import com.example.pintousuaris.fake.FakeDataSource.idPostOne
 import com.example.pintousuaris.fake.FakeDataSource.idPostThree
 import com.example.pintousuaris.fake.FakeDataSource.idPostTwo
+import com.example.pintousuaris.fake.FakeDataSource.titlePostOne
 import com.example.pintousuaris.fake.FakeDataSource.titlePostThree
 import com.example.pintousuaris.fake.FakeDataSource.titlePostTwo
 import com.example.pintousuaris.fake.FakeUserApiService
@@ -49,9 +52,9 @@ class NetworkUserRepositoryTest {
         val fakeList = listOf(
             Post(
                 userId = userId,
-                id = idPostTwo,
-                title = titlePostTwo,
-                body = bodyPostTwo
+                id = idPostOne,
+                title = titlePostOne,
+                body = bodyPostOne
             ),
             Post(
                 userId = userId,
@@ -61,6 +64,14 @@ class NetworkUserRepositoryTest {
             )
         )
 
+        val repositoryPostsList = repository.getPosts((userId))
+        assertEquals(fakeList, repositoryPostsList)
+    }
+
+    @Test
+    fun networkUsersRepository_getPosts_verifyPostsWhenUserHasNoPosts() = runTest {
+        val userId = 93
+        val fakeList = listOf<Post>()
         val repositoryPostsList = repository.getPosts((userId))
         assertEquals(fakeList, repositoryPostsList)
     }
