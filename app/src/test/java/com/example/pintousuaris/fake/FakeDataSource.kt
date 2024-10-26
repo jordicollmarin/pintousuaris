@@ -16,8 +16,11 @@ object FakeDataSource {
     private const val titlePostOne = "Post1 Fake title"
     private const val bodyPostOne = "Post1 Fake body"
     const val idPostTwo = 2222
-    const val titlePostTwo = "Post1 Fake title"
-    const val bodyPostTwo = "Post1 Fake body"
+    const val titlePostTwo = "Post2 Fake title"
+    const val bodyPostTwo = "Post2 Fake body"
+    const val idPostThree = 3333
+    const val titlePostThree = "Post3 Fake title"
+    const val bodyPostThree = "Post3 Fake body"
 
     val usersList = listOf(
         Usuari(
@@ -44,7 +47,13 @@ object FakeDataSource {
             id = idPostTwo,
             title = titlePostTwo,
             body = bodyPostTwo
-        )
+        ),
+        Post(
+            userId = idTwo,
+            id = idPostThree,
+            title = titlePostThree,
+            body = bodyPostThree
+    )
     )
 }
 
